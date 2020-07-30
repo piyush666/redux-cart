@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { removeItem, addQuantity, subQuantity } from '../actions/cartActions';
+import { CardColumns, Container, Card } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Cart = (props) => {
     const handleRemove = (id) => {
@@ -15,29 +17,39 @@ const Cart = (props) => {
     let addedItems = props.items.length ?
         (
             props.items.map(item => (
-                <div key={item.id}>
-                    <div>
-                        <img src={item.img} alt={item.title} />
-                        <span>{item.title}</span>
-                    </div>
-                    <div>
-                        <p>{item.desc}</p>
-                        <p><b>Price: {item.price}$</b></p>
-                        <p><b>Quantity:{item.quantity}</b></p>
-                        <button onClick={() => handleAddQuantity(item.id)}>increase</button>
-                        <button onClick={() => handleSubquantity(item.id)}>decrease</button>
-                    </div>
-                    <button onClick={() => handleRemove(item.id)}>remove</button>
-                </div>
-            ))
+                (item.quantity > 0) ? (
+                    <Card key={item.id}>
+                        <Card.Img variant="top" src={item.img} alt="Card image" />
+                        <Card.Body className="text-center">
+                            <Card.Title>{item.title}</Card.Title>
+                            <Card.Text>
+                                {item.desc}
+                            </Card.Text>
+                            <Card.Text>
+                                <b>Price: {item.price}$</b>
+
+                            </Card.Text>
+                            <Card.Text>
+                                <span><b>Quantity:{item.quantity}  </b></span>
+                                <span>
+                                    <Card.Link as={Link} to="/cart" ><i className="material-icons" onClick={() => handleAddQuantity(item.id)}>arrow_drop_up</i></Card.Link>
+                                    <Card.Link as={Link} to="/cart" ><i className="material-icons" onClick={() => handleSubquantity(item.id)}>arrow_drop_down</i></Card.Link>
+                                </span>
+                            </Card.Text>
+                            <Card.Link as={Link} to="/cart" ><i className="material-icons" onClick={() => handleRemove(item.id)}>clear</i></Card.Link>
+
+                        </Card.Body>
+                    </Card >) : (null)
+            )
+            )
         ) : (<p>please add something to cart</p>)
     return (
-        <div>
-            <h4>Your cart</h4>
-            <div>
+        <Container>
+            <h2>Your Cart</h2>
+            <CardColumns>
                 {addedItems}
-            </div>
-        </div>
+            </CardColumns>
+        </Container>
     )
 }
 
